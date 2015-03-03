@@ -1,7 +1,4 @@
 #urllib,urllib2,bs4
-import os
-os.system("export no_proxy=\" localhost, 127.0.0.1, iiit.ac.in, .iiit.ac.in, iiit.net, .iiit.net, 172.16.0.0/12, 192.168.0.0/16, 10.0.0.0/8,10.4.3.208, 10.4.3.68\"")
-os.system("export NO_PROXY=\"localhost, 127.0.0.1, iiit.ac.in, .iiit.ac.in, iiit.net, .iiit.net, 172.16.0.0/12, 192.168.0.0/16, 10.0.0.0/8,10.4.3.208, 10.4.3.68\"")
 
 link = "https://login.iiit.ac.in/cas/login?service=http%3A%2F10.4.3.68"
 link1 = "http://10.4.3.68/OJstats"
@@ -21,6 +18,7 @@ login_data = urllib.urlencode({'username' : username, 'password' : password})
 opener.open(link, login_data)
 resp1 = opener.open(link)
 resp=opener.open("http://10.4.3.68/OJstats")
+OJLIST=opener.open("http://10.4.3.68/userlist")
 opener1=opener
 
 soup = bs4.BeautifulSoup(resp.read())
@@ -49,5 +47,14 @@ for tr in trs:
                                 flag=1
                         if flag==0:
                             anss.append(am)
+
+soup = bs4.BeautifulSoup(OJLIST.read())
+trs = soup.find_all("tr")
+dic={}
+for tr in trs:
+    a=[]
+    for td in tr.children:
+        a.append(td.string)
+    dic[a[0]]=a[1];
 for item in anss:
-    print item
+    print str(item),str(dic[item])
